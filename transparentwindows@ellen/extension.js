@@ -32,10 +32,13 @@ const Indicator = new Lang.Class({
     Extends: PanelMenu.Button,
 
     _init: function() {
-    	//add label state for compact toggle
-    	this._labelState = 0; //normal label
     	//get settings from schema
         this._settings = Convenience.getSettings();
+       	this._mystate = this._settings.get_int('mystate');
+       	this._rawOppacity = this._settings.get_int('opacity');
+       	this._labelreadyOpacity = ((this._rawOppacity - 50) / opacity_opaque); // changes (int) into sth that will fit into slider
+       	//add label state for compact toggle
+    	this._labelState = this._settings.get_int('compactindicator');
         //add panel label for extension
         this.parent(St.Align.START);
         this.label = new St.Label({ text: '' });
@@ -44,17 +47,17 @@ const Indicator = new Lang.Class({
         //add on/off toggle
         this._tsToggle = new PopupMenu.PopupSwitchMenuItem(_("Transparent windows"), false, { style_class: 'popup-subtitle-menu-item' });
         this._tsToggle.connect('toggled', Lang.bind(this, this._onToggled));
-        this._tsToggle.setToggleState(1);
+        this._tsToggle.setToggleState(this._mystate);
         this.menu.addMenuItem(this._tsToggle);
         //add compact togle
         this._compactToggle = new PopupMenu.PopupSwitchMenuItem(_("Compact extension indicator"), false, { style_class: 'popup-subtitle-menu-item' });
         this._compactToggle.connect('toggled', Lang.bind(this, this._toggleCompact));
-        this._compactToggle.setToggleState(0);
+        this._compactToggle.setToggleState(this._labelState);
         this.menu.addMenuItem(this._compactToggle);
         //add global transparency slider
         this._tsValueTitle = new PopupMenu.PopupMenuItem(_("Global transparency value"), { reactive: false });
         this._tsValueLabel = new St.Label({ text: '' });
-        this._tsValueSlider = new PopupMenu.PopupSliderMenuItem(0.81);
+        this._tsValueSlider = new PopupMenu.PopupSliderMenuItem(this._labelreadyOpacity);
         this._tsValueLabel.set_text('%d%'.format(Math.floor((1 - this._tsValueSlider.value)  * 100)));
         this._tsValueSlider.connect('value-changed', Lang.bind(this, function(item) {
             this._tsValueLabel.set_text('%d%'.format(Math.floor((1 - item.value)  * 100)));
@@ -68,7 +71,7 @@ const Indicator = new Lang.Class({
         this._tsValueTitle_active = new PopupMenu.PopupMenuItem(_("Active window custom transparency"), { reactive: false });
         this._tsValueLabel_active = new St.Label({ text: '' });
         this._tsValueSlider_active = new PopupMenu.PopupSliderMenuItem(0.81);
-        this._tsValueLabel_active.set_text('%d%'.format(Math.floor((1 - this._tsValueSlider.value)  * 100)));
+        this._tsValueLabel_active.set_text('%d%'.format(Math.floor((1 - this._tsValueSlider_active.value)  * 100)));
         this._tsValueSlider_active.connect('value-changed', Lang.bind(this, function(item) {
             this._tsValueLabel_active.set_text('%d%'.format(Math.floor((1 - item.value)  * 100)));
         }));
@@ -107,6 +110,7 @@ const Indicator = new Lang.Class({
     },
     
     _toggleCompact: function() {
+    	this._settings.set_int('compactindicator', this._compactToggle.state)
     	this._labelState = this._compactToggle.state;
     	this._updateLabel(); 
     },
@@ -243,8 +247,6 @@ function updateOpacity() {
 
 function init() {
     settings = Convenience.getSettings();
-    settings.set_int('opacity', 225);
-    settings.set_int('mystate', 1);
 }
 
 function enable() {
