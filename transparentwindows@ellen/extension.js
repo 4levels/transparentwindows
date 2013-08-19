@@ -246,11 +246,27 @@ function updateOpacity() {
         }
     }
 }
-
+function myAutoHide() {
+	global.log('Done');
+	if (settings.get_int('showinpanel') > 0) {
+		if (typeof Main.panel._statusArea === 'undefined') {
+       		Main.panel.statusArea.myoppacitty.actor.hide();
+    	} else {
+        	Main.panel._statusArea.myoppacitty.actor.hide();
+    	}
+	} else {
+		if (typeof Main.panel._statusArea === 'undefined') {
+        	Main.panel.statusArea.myoppacitty.actor.show();
+    	} else {
+        	Main.panel._statusArea.myoppacitty.actor.show();
+    	}
+	}
+}
 function init() {
     settings = Convenience.getSettings();
     terminalTitle = settings.get_string('terminal-title');
     terminalOpacity = settings.get_int('terminalopacity');
+    //let hide = settings.get_int('showinpanel');
 }
 
 function enable() {
@@ -258,6 +274,7 @@ function enable() {
     Main.panel.addToStatusArea('myoppacitty', indicator);
     opacityChangedID = settings.connect('changed::opacity', function () { updateOpacity();  });
     stateChangedID = settings.connect('changed::mystate', function () { updateOpacity();  });
+    hideChanged = settings.connect('changed::showinpanel', function () { myAutoHide();  });
     on_window_created = global.display.connect('window-created', updateOpacity);
     updateOpacity();
 }
@@ -266,6 +283,7 @@ function disable() {
     global.display.disconnect(on_window_created);
     settings.disconnect(opacityChangedID);
     settings.disconnect(stateChangedID);
+    settings.disconnect(hideChanged);
     mydisconnect();
     indicator.destroy();
 }
