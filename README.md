@@ -1,5 +1,9 @@
-Transparentwindows
-==================
+WARNING THIS IS A TESTING BRANCH. IT IS BROKEN BY DESIGN!
+=========================================================
+!!!DO NO USE UNLESS YOU KNOW WHAT YOU ARE DOING!!!
+==================================================
+
+## Transparentwindows
 
 ### Extension for adding windows transparency to gnome-shell.
 * support for global transparency setting
