@@ -25,7 +25,8 @@ const TransparentWindowsMyWidget = new GObject.Class({
 
         this._settings = Convenience.getSettings();
         this.attach(new Gtk.Label({ label: 'Please use the panel indicator to change transparency settings.' }), 0, 0, 1, 1);
-        
+        this._entry = new Gtk.Entry({ hexpand: true });
+        this.attach(this._entry, 0, 0, 2, 1);
      //TODO: add a proper settings page. But before that will happen I need a working code for terminal window auto detection.
      //   this.attach(new Gtk.Label({ label: 'Windows opacity (Allowed Min is set 50 to avoid troubles)' }), 0, 0, 1, 1);
      //   let hscale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 50, 255, 1);

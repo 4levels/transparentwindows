@@ -8,7 +8,7 @@ const Lang = imports.lang;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 
-let settings, indicator, on_window_created, opacityChangedID, stateChangedID;
+let settings, indicator, on_window_created, opacityChangedID, stateChangedID, terminalTitle, terminalOpacity;
 var transparent = "Transparent";
 var opaque = "Opaque";
 var c_t = "Tr";
@@ -226,10 +226,13 @@ function updateOpacity() {
             var wksp = meta_win.get_workspace();
             if (handled_window_type(meta_win.get_window_type())) {
             	var pid = meta_win.get_pid();
+            	var w_title = meta_win.get_title();
             	win_exist[pid] = "i_exist";
             	if (hasCustomOpacity(pid)) {
             		setOpacity(wa, OpacityHashMap[pid]);
-            	} else {
+            	} else if (w_title.indexOf(terminalTitle) > -1) {
+        			setOpacity(wa, terminalOpacity);
+        		} else {
             		setOpacity(wa, opacity_transparent);	
             	}
             }            
@@ -244,9 +247,10 @@ function updateOpacity() {
     }
 }
 
-
 function init() {
     settings = Convenience.getSettings();
+    terminalTitle = settings.get_string('terminal-title');
+    terminalOpacity = settings.get_int('terminalopacity');
 }
 
 function enable() {
