@@ -8,9 +8,10 @@ WARNING THIS IS A TESTING BRANCH. IT IS BROKEN BY DESIGN!
 ### Extension for adding windows transparency to gnome-shell.
 * support for global transparency setting
 * support for per window transparency setting
+* support for indicator visibility setting
+* support for terminal windows auto detection and custom opacity
 
 #### Tested on:
-* 3.8.2 
 * 3.9.2 
 
 ### How to use:
@@ -18,6 +19,8 @@ WARNING THIS IS A TESTING BRANCH. IT IS BROKEN BY DESIGN!
 * to set a custom transparency value to a window, select it then use the active window slider to set the required transparency.
 * NOTE: windows with custom transparency will ignore global transparency settings
 * to remove custom transparency value from a window, select it and click "clear active window transparency", it will reset it to the global transparency value.
+* if all you need is terminal transparency, enable auto trancparency from the extenssion setting's menu.
+
 
 ### WARNING:
 * This extension may break anything else that changes opacity.
