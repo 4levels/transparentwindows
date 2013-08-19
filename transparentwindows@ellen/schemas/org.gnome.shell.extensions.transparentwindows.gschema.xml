@@ -35,6 +35,11 @@
       <summary>Toggle On/Off</summary>
       <description>Terminals auto opacity.</description>
     </key>
+    <key type="i" name="onlyterminal">
+      <default>0</default>
+      <summary>Toggle On/Off</summary>
+      <description>Terminals auto opacity.</description>
+    </key>
     <key type="s" name="terminal-title">
       <default>"user@host"</default>
       <summary>window title</summary>
