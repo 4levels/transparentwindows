@@ -27,7 +27,6 @@ const TransparentWindowsMyWidget = new GObject.Class({
   
         this._settings = Convenience.getSettings();
         this.mainBox = new Gtk.Grid({ row_spacing: 1, column_spacing: 15, margin_right:180,  });
-        this.attach(new Gtk.Label({ label: '[TODO: This text is missing. Hope it was not important.]', halign: Gtk.Align.START }), 0, 0, 1, 1);
         this._entry = new Gtk.Entry({ hexpand: true });
         this.attach(new Gtk.Label({ label: 'Terminal window title (hit enter to confirm):', halign: Gtk.Align.START }), 0, 5, 1, 1);
         this._entry.placeholder_text = this._settings.get_string('terminal-title');
