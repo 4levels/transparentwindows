@@ -1,4 +1,4 @@
-<schemalist gettext-domain="gnome-shell-extensions">
+<schemalist gettext-domain="gnome-shell-extensions"> 
   <schema path="/org/gnome/shell/extensions/transparentwindows/" id="org.gnome.shell.extensions.transparentwindows">
     <key type="i" name="opacity">
       <default>225</default>
