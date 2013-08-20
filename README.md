@@ -1,9 +1,5 @@
-WARNING THIS IS A TESTING BRANCH. IT IS BROKEN BY DESIGN!
-=========================================================
-!!!DO NO USE UNLESS YOU KNOW WHAT YOU ARE DOING!!!
-==================================================
-
-## Transparentwindows
+Transparentwindows
+=======================
 
 ### Extension for adding windows transparency to gnome-shell.
 * support for global transparency setting
@@ -11,8 +7,14 @@ WARNING THIS IS A TESTING BRANCH. IT IS BROKEN BY DESIGN!
 * support for indicator visibility setting
 * support for terminal windows auto detection and custom opacity
 
+### Changes
+* Added custom settings page
+* Added simple mode, just for terminals
+* You can now hide the panel indicator
+
 #### Tested on:
 * 3.9.2 
+* If you find any bugs please report them.
 
 ### How to use:
 * select globar transparency from the menu to set transparency for all new / currently existing windows
@@ -20,6 +22,8 @@ WARNING THIS IS A TESTING BRANCH. IT IS BROKEN BY DESIGN!
 * NOTE: windows with custom transparency will ignore global transparency settings
 * to remove custom transparency value from a window, select it and click "clear active window transparency", it will reset it to the global transparency value.
 * if all you need is terminal transparency, enable auto trancparency from the extenssion setting's menu.
+* Terminals are detected by the window title. Gnome terminal and xterm title ussualy starts with something like user@host, kde konsole is bit different. Just change this to whatever suits your needs. (you must type in something to get this working)
+
 
 
 ### WARNING:
