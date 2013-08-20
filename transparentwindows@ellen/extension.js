@@ -8,7 +8,7 @@ const Lang = imports.lang;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 
-let settings, indicator, on_window_created, opacityChangedID, stateChangedID;
+let settings, indicator, on_window_created, opacityChangedID, stateChangedID, terminalTitle, terminalOpacity;
 var transparent = "Transparent";
 var opaque = "Opaque";
 var c_t = "Tr";
@@ -134,8 +134,10 @@ const Indicator = new Lang.Class({
     },
     
     _onValueChanged_active: function() {
-        var oppa = Math.floor((this._tsValueSlider_active.value * 205) + 50);
-		setCustomOpacity(oppa);
+    	if (this._settings.get_int('onlyterminal') < 1) {
+        	var oppa = Math.floor((this._tsValueSlider_active.value * 205) + 50);
+			setCustomOpacity(oppa);
+		}
     },
 
     _onToggled: function() {
@@ -212,10 +214,61 @@ function mydisconnect() {
     });
     settings.set_int('mystate', 0);
 }
-// Updates opacity
 function updateOpacity() {
-  	var mystate = settings.get_int('mystate');
-    if (mystate == 1) {
+	if (settings.get_int('onlyterminal') > 0) {
+		smallUpdateOpacity();
+	} else if (settings.get_int('autoterminal') > 0) {
+		halfUpdateOpacity();
+	} else {
+		fullUpdateOpacity();
+	}
+}
+//small updateOpacity
+function smallUpdateOpacity() {
+	if (settings.get_int('mystate') > 0) {
+	var terminalTitle = settings.get_string('terminal-title');
+    var terminalOpacity = settings.get_int('terminalopacity');
+        global.get_window_actors().forEach(function(wa) {
+            var meta_win = wa.get_meta_window();
+            if (!meta_win) {
+                return;
+            }
+           
+            	var w_title = meta_win.get_title();
+           		if (w_title.indexOf(terminalTitle) > -1) {
+        			setOpacity(wa, terminalOpacity);
+        		}             
+        });
+	}
+}
+// half update opacity, just global and terminals
+function halfUpdateOpacity() {
+  	var terminalTitle = settings.get_string('terminal-title');
+    var terminalOpacity = settings.get_int('terminalopacity');
+    if (settings.get_int('mystate') > 0) {
+    	var opacity_transparent = settings.get_int('opacity');
+        global.get_window_actors().forEach(function(wa) {
+            var meta_win = wa.get_meta_window();
+            if (!meta_win) {
+                return;
+            }
+           
+            if (handled_window_type(meta_win.get_window_type())) {
+            	var w_title = meta_win.get_title();
+            	if (w_title.indexOf(terminalTitle) > -1) {
+        			setOpacity(wa, terminalOpacity);
+        		} else {
+            		setOpacity(wa, opacity_transparent);	
+            	}
+            }            
+        });
+    }
+}
+// Updates opacity, full run. 
+function fullUpdateOpacity() {
+  	if (settings.get_int('mystate') > 0) {
+  	var terminalTitle = settings.get_string('terminal-title');
+    var terminalOpacity = settings.get_int('terminalopacity');
     	var win_exist = {};
       	var opacity_transparent = settings.get_int('opacity');
         global.get_window_actors().forEach(function(wa) {
@@ -223,13 +276,16 @@ function updateOpacity() {
             if (!meta_win) {
                 return;
             }
-            var wksp = meta_win.get_workspace();
+           
             if (handled_window_type(meta_win.get_window_type())) {
             	var pid = meta_win.get_pid();
+            	var w_title = meta_win.get_title();
             	win_exist[pid] = "i_exist";
             	if (hasCustomOpacity(pid)) {
             		setOpacity(wa, OpacityHashMap[pid]);
-            	} else {
+            	} else if (w_title.indexOf(terminalTitle) > -1) {
+        			setOpacity(wa, terminalOpacity);
+        		} else {
             		setOpacity(wa, opacity_transparent);	
             	}
             }            
@@ -243,8 +299,21 @@ function updateOpacity() {
         }
     }
 }
-
-
+function myAutoHide() {
+	if (settings.get_int('showinpanel') > 0) {
+		if (typeof Main.panel._statusArea === 'undefined') {
+       		Main.panel.statusArea.myoppacitty.actor.hide();
+    	} else {
+        	Main.panel._statusArea.myoppacitty.actor.hide();
+    	}
+	} else {
+		if (typeof Main.panel._statusArea === 'undefined') {
+        	Main.panel.statusArea.myoppacitty.actor.show();
+    	} else {
+        	Main.panel._statusArea.myoppacitty.actor.show();
+    	}
+	}
+}
 function init() {
     settings = Convenience.getSettings();
 }
@@ -254,6 +323,9 @@ function enable() {
     Main.panel.addToStatusArea('myoppacitty', indicator);
     opacityChangedID = settings.connect('changed::opacity', function () { updateOpacity();  });
     stateChangedID = settings.connect('changed::mystate', function () { updateOpacity();  });
+    autoterminalChanged = settings.connect('changed::autoterminal', function () { updateOpacity();  });
+    terminalChanged = settings.connect('changed::onlyterminal', function () { updateOpacity();  });
+    hideChanged = settings.connect('changed::showinpanel', function () { myAutoHide();  });
     on_window_created = global.display.connect('window-created', updateOpacity);
     updateOpacity();
 }
@@ -262,6 +334,9 @@ function disable() {
     global.display.disconnect(on_window_created);
     settings.disconnect(opacityChangedID);
     settings.disconnect(stateChangedID);
+    settings.disconnect(hideChanged);
+    settings.disconnect(autoterminalChanged);
+    settings.disconnect(terminalChanged);
     mydisconnect();
     indicator.destroy();
 }
