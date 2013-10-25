@@ -6,14 +6,18 @@ Transparentwindows
 * support for per window transparency setting
 * support for indicator visibility setting
 * support for terminal windows auto detection and custom opacity
+* support for inactive windows transparency (BETA)
 
 ### Changes
+* Added inactive windows transparency settings
 * Added custom settings page
 * Added simple mode, just for terminals
 * You can now hide the panel indicator
 
 #### Tested on:
+* 3.8
 * 3.9.2 
+* Should work on anything 3.4++
 * If you find any bugs please report them.
 
 ### How to use:
