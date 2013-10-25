@@ -5,6 +5,16 @@
       <summary>Opacity</summary>
       <description>This will decide how transparent your windows are.</description>
     </key>
+    <key type="i" name="opacityinactive">
+      <default>225</default>
+      <summary>Opacity</summary>
+      <description>This will decide how transparent your inactive windows are.</description>
+    </key>
+    <key type="i" name="useinactive">
+      <default>0</default>
+      <summary>Toggle On/Off</summary>
+      <description>Turn inactive opacity On or Off.</description>
+    </key>
     <key type="i" name="activeopacity">
       <default>225</default>
       <summary>Opacity</summary>

@@ -223,7 +223,7 @@ function updateOpacity() {
 		fullUpdateOpacity();
 	}
 }
-//small updateOpacity
+//small updateOpacity, just for terminals
 function smallUpdateOpacity() {
 	if (settings.get_int('mystate') > 0) {
 	var terminalTitle = settings.get_string('terminal-title');
@@ -233,7 +233,6 @@ function smallUpdateOpacity() {
             if (!meta_win) {
                 return;
             }
-           
             	var w_title = meta_win.get_title();
            		if (w_title.indexOf(terminalTitle) > -1) {
         			setOpacity(wa, terminalOpacity);
@@ -267,10 +266,14 @@ function halfUpdateOpacity() {
 // Updates opacity, full run. 
 function fullUpdateOpacity() {
   	if (settings.get_int('mystate') > 0) {
-  	var terminalTitle = settings.get_string('terminal-title');
-    var terminalOpacity = settings.get_int('terminalopacity');
+	  	var opacity_inactive = settings.get_int('opacityinactive');
+	  	var terminalTitle = settings.get_string('terminal-title');
+		var terminalOpacity = settings.get_int('terminalopacity');
     	var win_exist = {};
       	var opacity_transparent = settings.get_int('opacity');
+      	if (settings.get_int('useinactive') < 1) {
+			opacity_inactive = opacity_transparent;
+		}
         global.get_window_actors().forEach(function(wa) {
             var meta_win = wa.get_meta_window();
             if (!meta_win) {
@@ -286,7 +289,12 @@ function fullUpdateOpacity() {
             	} else if (w_title.indexOf(terminalTitle) > -1) {
         			setOpacity(wa, terminalOpacity);
         		} else {
-            		setOpacity(wa, opacity_transparent);	
+        			if (meta_win.has_focus()) {
+           				setOpacity(wa, opacity_transparent);
+           			}
+            		else {
+            			setOpacity(wa, opacity_inactive);
+            		}	
             	}
             }            
         });
@@ -299,6 +307,7 @@ function fullUpdateOpacity() {
         }
     }
 }
+//hides the panel indicator if not needed
 function myAutoHide() {
 	if (settings.get_int('showinpanel') > 0) {
 		if (typeof Main.panel._statusArea === 'undefined') {
@@ -327,11 +336,13 @@ function enable() {
     terminalChanged = settings.connect('changed::onlyterminal', function () { updateOpacity();  });
     hideChanged = settings.connect('changed::showinpanel', function () { myAutoHide();  });
     on_window_created = global.display.connect('window-created', updateOpacity);
+    on_restacked = global.screen.connect('restacked', updateOpacity);
     updateOpacity();
 }
 
 function disable() {
     global.display.disconnect(on_window_created);
+    global.display.disconnect(on_restacked);
     settings.disconnect(opacityChangedID);
     settings.disconnect(stateChangedID);
     settings.disconnect(hideChanged);

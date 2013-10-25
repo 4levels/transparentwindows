@@ -28,10 +28,10 @@ const TransparentWindowsMyWidget = new GObject.Class({
         this._settings = Convenience.getSettings();
         this.mainBox = new Gtk.Grid({ row_spacing: 1, column_spacing: 15, margin_right:180,  });
         this._entry = new Gtk.Entry({ hexpand: true });
-        this.attach(new Gtk.Label({ label: 'Terminal window title (hit enter to confirm):', halign: Gtk.Align.START }), 0, 5, 1, 1);
+        this.attach(new Gtk.Label({ label: 'Terminal window title (hit enter to confirm):', halign: Gtk.Align.START }), 0, 7, 1, 1);
         this._entry.placeholder_text = this._settings.get_string('terminal-title');
         this._entry.connect('activate', Lang.bind(this, this._hitEnter));
-        this.attach(this._entry, 0, 6, 1, 1);
+        this.attach(this._entry, 0, 8, 1, 1);
         this._hide = new Gtk.CheckButton({label: 'Hide panel indicator', active: this._settings.get_int('showinpanel'),});
         this._hide.connect('toggled', Lang.bind(this, this._hideChanged));
         this.attach(this._hide, 0, 1, 1, 1);
@@ -41,6 +41,9 @@ const TransparentWindowsMyWidget = new GObject.Class({
         this._tonly = new Gtk.CheckButton({label: 'Aply opacity to terminals only', active: this._settings.get_int('onlyterminal'),});
         this._tonly.connect('toggled', Lang.bind(this, this._tonlyChanged));
         this.attach(this._tonly, 0, 3, 1, 1);
+        this._inact = new Gtk.CheckButton({label: 'Use inactive opacity', active: this._settings.get_int('useinactive'),});
+        this._inact.connect('toggled', Lang.bind(this, this._ionlyChanged));
+        this.attach(this._inact, 0, 4, 1, 1);
 		//add global opacity slider     
         this.mainBox.attach(new Gtk.Label({ label: 'Global opacity', halign: Gtk.Align.START }), 0, 2, 1, 1);
         this.hscale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 50, 255, 1);
@@ -57,7 +60,16 @@ const TransparentWindowsMyWidget = new GObject.Class({
         this.termScale.set_hexpand(true);
         this.termScale.connect('value-changed', Lang.bind(this, this._topacityChanged));
         this.mainBox.attach(this.termScale, 1, 3, 1, 1);
-      	this.attach(this.mainBox, 0, 4, 1, 1);
+      	this.attach(this.mainBox, 0, 5, 1, 1);
+      	//add inactive opacity slider
+        this.mainBox.attach(new Gtk.Label({ label: 'Inactive opacity', halign: Gtk.Align.START }), 0, 4, 1, 1);
+        this.inactScale = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 50, 255, 1);
+        this.inactScale.set_value(this._settings.get_int('opacityinactive'));
+        this.inactScale.set_digits(0);
+        this.inactScale.set_hexpand(true);
+        this.inactScale.connect('value-changed', Lang.bind(this, this._iopacityChanged));
+        this.mainBox.attach(this.inactScale, 1, 4, 1, 1);
+      	this.attach(this.mainBox, 0, 6, 1, 1);
     },
 	
 	_hideChanged: function() {
@@ -73,6 +85,14 @@ const TransparentWindowsMyWidget = new GObject.Class({
 			this._settings.set_int('onlyterminal', 0);
 		} else {
 			this._settings.set_int('onlyterminal', 1);
+		}
+	},
+	
+	_ionlyChanged: function() {
+		if (this._settings.get_int('useinactive') > 0) {
+			this._settings.set_int('useinactive', 0);
+		} else {
+			this._settings.set_int('useinactive', 1);
 		}
 	},
 	
@@ -96,6 +116,10 @@ const TransparentWindowsMyWidget = new GObject.Class({
     
     _topacityChanged: function () {
         this._settings.set_int('terminalopacity', this.termScale.get_value());
+    },
+    
+    _iopacityChanged: function () {
+        this._settings.set_int('opacityinactive', this.inactScale.get_value());
     },
 });
 
