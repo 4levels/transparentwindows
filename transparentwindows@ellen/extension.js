@@ -8,11 +8,14 @@ const Lang = imports.lang;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 
+const Gettext = imports.gettext.domain('transparentwindows');
+const _ = Gettext.gettext;
+
 let settings, indicator, on_window_created, opacityChangedID, stateChangedID, terminalTitle, terminalOpacity;
-var transparent = "Transparent";
-var opaque = "Opaque";
-var c_t = "Tr";
-var c_o = "Op";
+var transparent = _("Transparent");
+var opaque = _("Opaque");
+var c_t = _("Tr");
+var c_o = _("Op");
 var OpacityHashMap = {};
 var opacity_opaque = 255;
 var handled_window_types = [
@@ -96,15 +99,15 @@ const Indicator = new Lang.Class({
     _updateLabel: function() {
         if (this._settings.get_int('mystate') == 1) {
         	if (!this._labelState) {
-				this.label.set_text(transparent);        			
+				this.label.set_text(_(transparent));        			
         	} else {
-        		this.label.set_text(c_t);
+        		this.label.set_text(_(c_t));
         	}	
         } else {
         	if (!this._labelState) {
-	        	this.label.set_text(opaque);
+	        	this.label.set_text(_(opaque));
         	} else {
-        		this.label.set_text(c_o);
+        		this.label.set_text(_(c_o));
         	}
         }
     },
@@ -325,6 +328,7 @@ function myAutoHide() {
 }
 function init() {
     settings = Convenience.getSettings();
+    Convenience.initTranslations("transparentwindows");
 }
 
 function enable() {
