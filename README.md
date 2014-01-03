@@ -9,15 +9,15 @@ Transparentwindows
 * support for inactive windows transparency (BETA)
 
 ### Changes
+* Converted to 3.10 only due to gShell API changes.
 * Added inactive windows transparency settings
 * Added custom settings page
 * Added simple mode, just for terminals
 * You can now hide the panel indicator
 
 #### Tested on:
-* 3.8
-* 3.9.2 
-* Should work on anything 3.4++
+* 3.10
+* Will not work on anything below 3.10
 * If you find any bugs please report them.
 
 ### How to use:
@@ -33,6 +33,7 @@ Transparentwindows
 ### WARNING:
 * This extension may break anything else that changes opacity.
 * Having many transparent windows may and probably will kill your performance. You may expiriance lag while dragging windows around. It all depends on your hardware tho.
+* You use this extenion at your own risk. If you have any doubts, do NOT install it.
 
 HOW TO INSTALL:
 ---------------

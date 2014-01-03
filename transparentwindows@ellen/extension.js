@@ -7,6 +7,8 @@ const Convenience = Me.imports.convenience;
 const Lang = imports.lang;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
+const Slider = imports.ui.slider;
+const Widget = Me.imports.widget;
 
 const Gettext = imports.gettext.domain('transparentwindows');
 const _ = Gettext.gettext;
@@ -58,32 +60,14 @@ const Indicator = new Lang.Class({
         this._compactToggle.setToggleState(this._labelState);
         this.menu.addMenuItem(this._compactToggle);
         //add global transparency slider
-        this._tsValueTitle = new PopupMenu.PopupMenuItem(_("Global transparency value"), { reactive: false });
-        this._tsValueLabel = new St.Label({ text: '' });
-        this._tsValueSlider = new PopupMenu.PopupSliderMenuItem(this._labelreadyOpacity);
-        this._tsValueLabel.set_text('%d%'.format(Math.floor((1 - this._tsValueSlider.value)  * 100)));
-        this._tsValueSlider.connect('value-changed', Lang.bind(this, function(item) {
-            this._tsValueLabel.set_text('%d%'.format(Math.floor((1 - item.value)  * 100)));
-        }));
+        this._tsValueSlider = new Widget.SliderItem(_("Global transparency value"), 0.81);
         this._tsValueSlider.connect('drag-end', Lang.bind(this, this._onValueChanged));
-        this._tsValueSlider.actor.connect('scroll-event', Lang.bind(this, this._onValueChanged));
-        this._tsValueTitle.addActor(this._tsValueLabel, { align: St.Align.END });
-        this.menu.addMenuItem(this._tsValueTitle);
         this.menu.addMenuItem(this._tsValueSlider);
         //add active window transparency slider
-        this._tsValueTitle_active = new PopupMenu.PopupMenuItem(_("Active window custom transparency"), { reactive: false });
-        this._tsValueLabel_active = new St.Label({ text: '' });
-        this._tsValueSlider_active = new PopupMenu.PopupSliderMenuItem(0.81);
-        this._tsValueLabel_active.set_text('%d%'.format(Math.floor((1 - this._tsValueSlider_active.value)  * 100)));
-        this._tsValueSlider_active.connect('value-changed', Lang.bind(this, function(item) {
-            this._tsValueLabel_active.set_text('%d%'.format(Math.floor((1 - item.value)  * 100)));
-        }));
+        this._tsValueSlider_active = new Widget.SliderItem(_("Active window custom transparency"), 0.81);
         this._tsValueSlider_active.connect('drag-end', Lang.bind(this, this._onValueChanged_active));
-        this._tsValueSlider_active.actor.connect('scroll-event', Lang.bind(this, this._onValueChanged_active));
-        this._tsValueTitle_active.addActor(this._tsValueLabel_active, { align: St.Align.END });
-        this.menu.addMenuItem(this._tsValueTitle_active);
         this.menu.addMenuItem(this._tsValueSlider_active);
-        //add remove custom transparency button
+	//add remove custom transparency button
         this._clearActiveToggle = new PopupMenu.PopupSwitchMenuItem(_("Clear active window transparency"), false, { style_class: 'popup-subtitle-menu-item' });
         this._clearActiveToggle.connect('toggled', Lang.bind(this, this._onToggled_clear_active));
         this._clearActiveToggle.setToggleState(0);
