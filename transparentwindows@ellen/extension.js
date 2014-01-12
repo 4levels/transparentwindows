@@ -325,6 +325,7 @@ function enable() {
     hideChanged = settings.connect('changed::showinpanel', function () { myAutoHide();  });
     on_window_created = global.display.connect('window-created', updateOpacity);
     on_restacked = global.screen.connect('restacked', updateOpacity);
+    myAutoHide();
     updateOpacity();
 }
 
