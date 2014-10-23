@@ -39,7 +39,7 @@ const TransparentWindowsMyWidget = new GObject.Class({
         this._aoppacity = new Gtk.CheckButton({label: _("Auto apply opacity to terminals"), active: this._settings.get_int('autoterminal'),});
         this._aoppacity.connect('toggled', Lang.bind(this, this._autoChanged));
         this.attach(this._aoppacity, 0, 2, 1, 1);
-        this._tonly = new Gtk.CheckButton({label: _("Aply opacity to terminals only"), active: this._settings.get_int('onlyterminal'),});
+        this._tonly = new Gtk.CheckButton({label: _("Apply opacity to terminals only"), active: this._settings.get_int('onlyterminal'),});
         this._tonly.connect('toggled', Lang.bind(this, this._tonlyChanged));
         this.attach(this._tonly, 0, 3, 1, 1);
         this._inact = new Gtk.CheckButton({label: _("Use inactive opacity"), active: this._settings.get_int('useinactive'),});
