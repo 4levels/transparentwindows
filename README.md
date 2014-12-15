@@ -1,5 +1,9 @@
+!!! WARNING: THIS EXTENSION IS OFFICIALLY DEAD. IT WILL NOT UPDATE. !!! 
+
+
 Transparentwindows
 =======================
+### I do belive i hate gnome. At least the state it is now. _it's just not ready for use_ Using it feels like an endless beta with things breaking every morning. meh.
 
 ### Extension for adding windows transparency to gnome-shell.
 * support for global transparency setting
