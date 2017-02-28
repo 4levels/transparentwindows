@@ -17,6 +17,7 @@
 const St = imports.gi.St;
 const PopupMenu = imports.ui.popupMenu;
 const Slider = imports.ui.slider;
+const Clutter = imports.gi.Clutter;
 const Lang = imports.lang;
 
 const SliderItem = new Lang.Class({
@@ -26,13 +27,19 @@ const SliderItem = new Lang.Class({
     _init: function(label, value) {
         this.parent();
 
-        this._box = new St.Table({style_class: 'slider-item'});
+        let layout = new Clutter.GridLayout();
+        layout.set_column_homogeneous(true);
+
+        this._box = new St.Widget({
+            style_class: 'slider-item',
+            layout_manager: layout
+        });
 
         this._slider = new Slider.Slider(value);
         this._label = new St.Label({text: label});
 
-        this._box.add(this._label, {row: 0, col: 0, x_expand: false});
-        this._box.add(this._slider.actor, {row: 1, col: 0, x_expand: true});
+        layout.attach(this._label, 0, 0, 1, 1);
+        layout.attach(this._slider.actor, 0, 1, 1, 1);
 
         this.actor.add(this._box, {span: -1, expand: true});
     },
